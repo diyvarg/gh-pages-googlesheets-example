@@ -31,8 +31,8 @@ function setValues(sheet, e) {
     newrow.push(e.parameter[headers[i]]);
   }
   var nextRow = sheet.getLastRow() + 1;      
-  sheet.getRange(nextRow, 1, 1, row.length)
-       .setValues([row]);
+  sheet.getRange(nextRow, 1, 1, newrow.length)
+       .setValues([newrow]);
   return nextRow;     
 }
 
