@@ -14,25 +14,30 @@
             <br/>
             <button type="submit" id="submit-form">Submit</button>
             <a href="https://docs.google.com/spreadsheets/d/178agwdIps-k_cHemF6GoE6HJzQ6yBlgYqnQETbNURHk/edit#gid=0">google sheets</a>
+            <div id="notification" />
           </form>
           <script>
             // в таблице в меню выбрать: Инструменты - Редактор скриптов   
             // ... далее см. src\googlesheetsapp.js  
             var googleSheetsAppUrl = "https://script.google.com/macros/s/AKfycbynmmPqfUK-FynNLLK-_jr2guCEi47PaKe9Z0MWd7m9FlFsSiKg/exec";
-            var $form = $('form#test-form');
-            $('#submit-form').on('click', function(e) {
+            var timeoutID = null;
+            $('#submit-form').on('click', (e) => {
                 e.preventDefault();
+                $(e.target).prop('disabled', true);
+                window.clearTimeout(timeoutID);
+                $('#notification').text("saving...");
                 $.ajax({
                     url: googleSheetsAppUrl,
                     method: "GET",
-                    data: $form.serialize()
-                    })
-                .done(function(msg) {
-                    alert("saved");
-                })
-                .fail(function (jqXHR, textStatus, errorThrown) {    
-                    alert("failed: " + textStatus + "; " +  errorThrown);        
+                    data: $('form#test-form').serialize()
+                }).done((msg) => {
+                    $('#notification').text("saved");
+                    timeoutID = window.setTimeout(() => { $('#notification').text(""); }, 1200);
+                    $(e.target).prop('disabled', false);
+                }).fail((jqXHR, textStatus, errorThrown) => {    
+                    $('#notification').text("failed: " + textStatus + "; " +  errorThrown);        
                 });
+                
             })
           </script> 
     </body>
