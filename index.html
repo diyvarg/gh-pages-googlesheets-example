@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    </head>
+    <body>
+        <form id="test-form">
+            <div>
+              <label>Field 1</label>
+              <input type="text" name="form_field_1" placeholder="Field 1"/>
+            </div>
+            <div>
+              <label>Field 2</label>
+              <input type="text" name="form_field_2" placeholder="Field 2"/>
+            </div>
+            <button type="submit" id="submit-form">Submit</button>
+          </form>
+          <script>
+            // в таблице https://docs.google.com/spreadsheets/d/178agwdIps-k_cHemF6GoE6HJzQ6yBlgYqnQETbNURHk/edit#gid=0
+            // в меню выбрать: Инструменты - Редактор скриптов   
+            // ... далее см. src\googlesheetsapp.js  
+            var googleSheetsAppUrl = "https://script.google.com/macros/s/AKfycbynmmPqfUK-FynNLLK-_jr2guCEi47PaKe9Z0MWd7m9FlFsSiKg/exec";
+            var $form = $('form#test-form');
+            $('#submit-form').on('click', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: googleSheetsAppUrl,
+                    method: "GET",
+                    data: $form.serialize()
+                    })
+                .done(function(msg) {
+                    alert("saved");
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {    
+                    alert("failed: " + textStatus + "; " +  errorThrown);        
+                });
+            })
+          </script> 
+    </body>
+</html>
